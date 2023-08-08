@@ -1,10 +1,10 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_curve, auc
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 import matplotlib.pyplot as plt
 
-# Load the dataset 
+# Load the dataset
 feature_names = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width']
 data = pd.read_csv('iris.data', names=feature_names + ['species'])
 
@@ -30,33 +30,18 @@ model.fit(X_train, y_train)
 # Make predictions on the test data
 y_pred = model.predict(X_test)
 
-# Calculate evaluation metrics
+# Calculate accuracy
 accuracy = accuracy_score(y_test, y_pred)
-precision = precision_score(y_test, y_pred, average='weighted')
-recall = recall_score(y_test, y_pred, average='weighted')
-f1 = f1_score(y_test, y_pred, average='weighted')
-
-# Calculate ROC curve and AUC score
-y_probs = model.predict_proba(X_test)
-fpr, tpr, _ = roc_curve(y_test, y_probs[:, 1])
-roc_auc = auc(fpr, tpr)
-
-# Print evaluation metrics
 print(f"Accuracy: {accuracy:.2f}")
-print(f"Precision: {precision:.2f}")
-print(f"Recall: {recall:.2f}")
-print(f"F1 Score: {f1:.2f}")
-print(f"ROC AUC: {roc_auc:.2f}")
 
-# Plot ROC curve
-plt.figure()
-plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
-plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
-plt.xlim([0.0, 1.0])
-plt.ylim([0.0, 1.05])
-plt.xlabel('False Positive Rate')
-plt.ylabel('True Positive Rate')
-plt.title('Receiver Operating Characteristic')
-plt.legend(loc="lower right")
-plt.show()
+# Calculate precision, recall, and F1-score for each class
+precision_per_class, recall_per_class, f1_per_class, _ = precision_recall_fscore_support(y_test, y_pred, average=None, labels=model.classes_)
 
+for i, class_name in enumerate(model.classes_):
+    print(f"Class: {class_name}")
+    print(f"Precision: {precision_per_class[i]:.2f}")
+    print(f"Recall: {recall_per_class[i]:.2f}")
+    print(f"F1-score: {f1_per_class[i]:.2f}")
+    print()
+
+# ... (Plotting ROC curve)
