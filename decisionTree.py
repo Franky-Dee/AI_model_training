@@ -5,8 +5,7 @@ from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 import matplotlib.pyplot as plt
 
 # Load the dataset
-feature_names = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width']
-data = pd.read_csv('iris.data', names=feature_names + ['species'])
+data = pd.read_csv('winequality-red.csv')  # Make sure to provide the correct path to the Wine Quality dataset
 
 # Display the first few rows of the dataset
 print(data.head())
@@ -15,8 +14,8 @@ print(data.head())
 print(data.isnull().sum())
 
 # Separate features (X) and target (y)
-X = data.drop('species', axis=1)
-y = data['species']
+X = data.drop('quality', axis=1)
+y = data['quality']
 
 # Split the dataset into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -35,13 +34,11 @@ accuracy = accuracy_score(y_test, y_pred)
 print(f"Accuracy: {accuracy:.2f}")
 
 # Calculate precision, recall, and F1-score for each class
-precision_per_class, recall_per_class, f1_per_class, _ = precision_recall_fscore_support(y_test, y_pred, average=None, labels=model.classes_)
+precision_per_class, recall_per_class, f1_per_class, _ = precision_recall_fscore_support(y_test, y_pred, average=None)
 
-for i, class_name in enumerate(model.classes_):
-    print(f"Class: {class_name}")
+for i, class_value in enumerate(sorted(y_test.unique())):
+    print(f"Class: {class_value}")
     print(f"Precision: {precision_per_class[i]:.2f}")
     print(f"Recall: {recall_per_class[i]:.2f}")
     print(f"F1-score: {f1_per_class[i]:.2f}")
     print()
-
-
