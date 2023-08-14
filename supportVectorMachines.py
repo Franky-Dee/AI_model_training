@@ -5,8 +5,9 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 import matplotlib.pyplot as plt
 
 # Load the dataset (replace 'iris.csv' with your dataset file path)
-feature_names = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width']
-data = pd.read_csv('iris.data', names=feature_names + ['species'])
+data = pd.read_csv('wine.data', header=None)
+feature_names = ['alcohol', 'malic_acid', 'ash', 'alcalinity_of_ash', 'magnesium', 'total_phenols', 'flavanoids', 'nonflavanoid_phenols', 'proanthocyanins', 'color_intensity', 'hue', 'od280/od315_of_diluted_wines', 'proline']
+data.columns = ['class'] + feature_names
 
 # Display the first few rows of the dataset
 print(data.head())
@@ -15,8 +16,8 @@ print(data.head())
 print(data.isnull().sum())
 
 # Separate features (X) and target (y)
-X = data.drop('species', axis=1)
-y = data['species']
+X = data.drop('class', axis=1)
+y = data['class']
 
 # Split the dataset into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
